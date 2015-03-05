@@ -23,7 +23,29 @@ agfunderApp.controller('AppCtrl', ['$scope',
         $scope.options = {axes: {y2: {min: -15, max: 15}},series: [
             {y: 'val_2', label: 'One', type: 'area', striped: true},
             {y: 'y', type: 'area', striped: true, label: 'Two'},
-            {y: 'other_y', type: 'area', label: 'Three', striped: true, axis: 'y2'}
+            {y: 'other_y', type: 'area', label: 'Three', striped: true, axis: 'y2'},
+            {y: 'val_3', type: 'area', label: 'Four', striped: true, axis: 'y2'}
         ], lineMode: 'cardinal', tooltip: {mode: 'scrubber'}};
+
+        $scope.linKonD = 3;
+        $scope.linKonA = 3;
+        $scope.linKonC = 3;
+        $scope.linKonM = 3;
+        $scope.linKonX0 = 3;
+        $scope.countNumber = 5;
+        $scope.results = [];
+
+        var linKongr = function(){
+            var xi1 = $scope.linKonX0;
+            $scope.results = [];
+            for(var i = 0; i < $scope.countNumber; i++){
+                $scope.results.push(xi1);
+                xi1 = ($scope.linKonD * xi1 * xi1 + $scope.linKonA * xi1 + $scope.linKonC) % $scope.linKonM;
+            }
+        };
+
+        $scope.clickSubmit = function(){
+            linKongr();
+        };
 
     }]);

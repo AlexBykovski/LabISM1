@@ -7,9 +7,28 @@
     <script type="text/javascript" src="../bower_components/d3/d3.min.js"></script>
     <script type="text/javascript" src="../bower_components/moment/moment.js"></script>
     <script type="text/javascript" src="../bower_components/n3-line-chart/build/line-chart.min.js"></script>
+    <script type="text/javascript" src="../bower_components/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
     <script type="text/javascript" src="app.js"></script>
 </head>
 <body ng-controller="AppCtrl">
-<linechart data="data" options="options" width="600" height="600"></linechart>
+<form ng-submit="clickSubmit()" style="width: 30%">
+    <div>
+        d:&nbsp;&nbsp;&nbsp;<input ng-model="linKonD" min="1" type="number"><br><br>
+        a:&nbsp;&nbsp;&nbsp;<input ng-model="linKonA" min="1" type="number"><br><br>
+        c:&nbsp;&nbsp;&nbsp;<input ng-model="linKonC" type="number"><br><br>
+        m:&nbsp;&nbsp;<input ng-model="linKonM" type="number"><br><br>
+        x0:&nbsp;<input ng-model="linKonX0" type="number"><br><br>
+        Count:&nbsp;<input ng-model="countNumber" type="number"><br><br>
+    </div>
+    <input type="submit">
+</form>
+<div style="float: left;  margin-left: 900px;  margin-top: -250px;">
+    <textarea>
+        {{results}}
+    </textarea>
+    </div>
+<linechart data="data" options="options" style="float: left" width="600" height="600"></linechart>
 </body>
 </html>
