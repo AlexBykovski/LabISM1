@@ -93,11 +93,28 @@ agfunderApp.controller('AppCtrl', ['$scope',
             }
 
             $scope.results = [];
+            $scope.data = [];
             for (var i = 0; i < $scope.countNumber; ++i) {
                 var k = ( $scope.maclarenK * rez2[i] / $scope.linKonM);
                 $scope.results.push(v[parseInt(k, 10)]);
                 v[parseInt(k, 10)] = rez1[i];
             }
+            for(var i = 0; i < $scope.results.length - 1;++i){
+                $scope.data.push({x: $scope.results[i], y: $scope.results[i+1]});
+            }
+
+            console.log("////////////////X////////////////");
+            var resX = "";
+            for(var i = 0; i < $scope.data.length; i++){
+                resX = resX + $scope.data[i].x + "\n";
+            }
+            console.log(resX);
+            var resY = "";
+            console.log("////////////////Y////////////////")
+            for(var i = 0; i < $scope.data.length; i++){
+                resY = resY + $scope.data[i].y + "\n";
+            }
+            console.log(resY);
 
         };
 
