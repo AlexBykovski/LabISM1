@@ -3,6 +3,8 @@ var agfunderApp = angular.module('agfunderApp', ['n3-line-chart']);
 
 agfunderApp.controller('AppCtrl', ['$scope',
     function ($scope) {
+        $scope.isFirst = true;
+        $scope.typeTask = 'linkon';
         $scope.data = [
             /*{x: 0, y: 0},
             {x: 1, y: 0.993},
@@ -20,19 +22,33 @@ agfunderApp.controller('AppCtrl', ['$scope',
             {x: 13, y: 2.578}*/
         ];
 
+
         $scope.options = {series: [
             {y: 'y', label: 'One', striped: true}
         ], lineMode: 'cardinal', tooltip: {mode: 'scrubber'}};
 
-        $scope.linKonD = 3;
-        $scope.linKonA = 3;
-        $scope.linKonC = 3;
-        $scope.linKonM = 3;
-        $scope.linKonX0 = 3;
-        $scope.countNumber = 5;
+        $scope.linKonD = 1;
+        $scope.linKonA = 115;
+        $scope.linKonC = 75;
+        $scope.linKonM = 130;
+        $scope.linKonX0 = 16;
+        $scope.countNumber = 25;
+
+        $scope.linKonD2 = 1;
+        $scope.linKonA2 = 96;
+        $scope.linKonC2 = 105;
+        $scope.linKonX02 = 24;
+        $scope.maclarenK = 20;
+        $scope.degree = 1;
+
         $scope.results = [];
 
-        var linKongr = function(){
+        $scope.changeTask = function(type){
+            console.log($scope.typeTask);
+            $scope.typeTask = type;
+        };
+
+        var linKongrFirst = function(){
             var xi1 = $scope.linKonX0;
             $scope.results = [];
             $scope.data = [];
@@ -42,10 +58,91 @@ agfunderApp.controller('AppCtrl', ['$scope',
                 xi1 = ($scope.linKonD * xi1 * xi1 + $scope.linKonA * xi1 + $scope.linKonC) % $scope.linKonM;
                 $scope.data[i].y = xi1;
             }
+            console.log("////////////////X////////////////");
+            var resX = "";
+            for(var i = 0; i < $scope.countNumber; i++){
+                resX = resX + $scope.data[i].x + "\n";
+            }
+            console.log(resX);
+            var resY = "";
+            console.log("////////////////Y////////////////")
+            for(var i = 0; i < $scope.countNumber; i++){
+                resY = resY + $scope.data[i].y + "\n";
+            }
+            console.log(resY);
+        };
+
+        var linKongr = function(d, a, c, x0, m, count){
+            var xi1 = x0;
+            var results = [];
+            for(var i = 0; i < count; i++){
+                results.push(xi1);
+                xi1 = (d * xi1 * xi1 + a * xi1 + c) % m;
+            }
+            return results;
+        };
+
+        var maclaren = function(){
+            var rez1 = linKongr($scope.linKonD, $scope.linKonA, $scope.linKonC, $scope.linKonX0,$scope.linKonM,
+                $scope.countNumber);
+            var rez2 = linKongr($scope.linKonD2, $scope.linKonA2, $scope.linKonC2, $scope.linKonX02,$scope.linKonM,
+                $scope.countNumber);
+            var v = [];
+            for (var i = 0; i < $scope.maclarenK; ++i) {
+                v.push(rez1[i]);
+            }
+
+            $scope.results = [];
+            for (var i = 0; i < $scope.countNumber; ++i) {
+                var k = ( $scope.maclarenK * rez2[i] / $scope.linKonM);
+                $scope.results.push(v[parseInt(k, 10)]);
+                v[parseInt(k, 10)] = rez1[i];
+            }
+
+        };
+
+        var nachMoment = function(gener, degree) {
+            var result = 0;
+            for (var i = 0; i < $scope.countNumber; ++i) {
+                result = result + Math.pow(gener[i], degree) / $scope.countNumber;
+            }
+            return result;
+        };
+
+        var centrMoment = function(gener, degree) {
+            var nach = nachMoment(gener, 1);
+            var result = 0;
+            for (var i = 0; i < $scope.countNumber; ++i) {
+                result = result + Math.pow(gener[i] - nach, degree) / $scope.countNumber;
+            }
+            return result;
+        };
+
+        var moments = function(gener, degree){
+            $scope.results = [];
+            $scope.results.push(nachMoment(gener, degree).toFixed(5));
+            $scope.results.push(centrMoment(gener, degree).toFixed(5));
         };
 
         $scope.clickSubmit = function(){
-            linKongr();
+            switch($scope.typeTask){
+                case 'linkon':
+                    linKongrFirst();
+                    break;
+                case 'maclaren':
+                    maclaren();
+                    break;
+                case 'momenty':
+                    var res = linKongr($scope.linKonD, $scope.linKonA, $scope.linKonC, $scope.linKonX0,$scope.linKonM,
+                        $scope.countNumber);
+                    moments(res, $scope.degree);
+                    break;
+                case 'scatter':
+                   // maclaren();
+                    break;
+                default:
+                    break;
+            }
         };
 
     }]);

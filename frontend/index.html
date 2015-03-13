@@ -13,21 +13,35 @@
     <script type="text/javascript" src="app.js"></script>
 </head>
 <body ng-controller="AppCtrl">
+<div ng-show="isFirst">
 <form ng-submit="clickSubmit()" style="width: 30%">
     <div>
-        d:&nbsp;&nbsp;&nbsp;<input ng-model="linKonD" min="1" type="number"><br><br>
-        a:&nbsp;&nbsp;&nbsp;<input ng-model="linKonA" min="1" type="number"><br><br>
-        c:&nbsp;&nbsp;&nbsp;<input ng-model="linKonC" type="number"><br><br>
+        d:&nbsp;&nbsp;&nbsp;<input ng-model="linKonD" min="0" type="number">
+        d2:&nbsp;&nbsp;&nbsp;<input ng-model="linKonD2" type="number"><br><br>
+        a:&nbsp;&nbsp;&nbsp;<input ng-model="linKonA" min="1" type="number">
+        a2:&nbsp;&nbsp;&nbsp;<input ng-model="linKonA2" type="number"><br><br>
+        c:&nbsp;&nbsp;&nbsp;<input ng-model="linKonC" type="number">
+        c2:&nbsp;&nbsp;&nbsp;<input ng-model="linKonC2" type="number"><br><br>
         m:&nbsp;&nbsp;<input ng-model="linKonM" type="number"><br><br>
-        x0:&nbsp;<input ng-model="linKonX0" type="number"><br><br>
+        x0:&nbsp;<input ng-model="linKonX0" type="number">
+        x02:&nbsp;<input ng-model="linKonX02" type="number"><br><br>
+        k:&nbsp;<input ng-model="maclarenK" type="number"><br><br>
         Count:&nbsp;<input ng-model="countNumber" type="number"><br><br>
+        degree:&nbsp;<input ng-model="degree" type="number"><br><br>
     </div>
-    <input type="submit">
+    <input type="submit" value="KG">
 </form>
 <div style="float: left;  margin-left: 500px;  margin-top: -250px;">
     <textarea style="width: 377px;  height: 201px;">
         {{results}}
     </textarea>
+    </div>
+</div>
+<div style="margin-left: 1000px;  margin-top: -258px;">
+    KO<input type="radio" name="task" ng-click="changeTask('linkon')" checked><br>
+    MMO<input type="radio" name="task" ng-click="changeTask('maclaren')"><br>
+    Moments<input type="radio" name="task" ng-click="changeTask('momenty')"><br>
+    Scatter<input type="radio" name="task" ng-click="changeTask('scatter')">
     </div>
 <linechart data="data" options="options" style="float: left" width="600" height="600"></linechart>
 </body>
