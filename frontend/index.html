@@ -35,7 +35,9 @@
 <div style="margin-left: 1000px;">
     Bernulli<input type="radio" name="task" ng-click="changeTask('bernulli')" checked><br>
     Puasson<input type="radio" name="task" ng-click="changeTask('puasson')"><br>
-    HyperGeometric<input type="radio" name="task" ng-click="changeTask('hypergeom')">
+    HyperGeometric<input type="radio" name="task" ng-click="changeTask('hypergeom')"><br>
+    Moments<input type="checkbox" name="groupCheckbox" ng-model="isMoments">
+    Check<input type="checkbox" name="groupCheckbox" ng-model="isProverka">
     </div>
 <linechart data="data" options="options" style="float: left" width="600" height="600"></linechart>
 </body>

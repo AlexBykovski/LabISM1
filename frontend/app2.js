@@ -14,6 +14,8 @@ app2.controller('AppCtrl', ['$scope',
         $scope.isBernulli = true;
         $scope.isPuasson = false;
         $scope.isHGeom = false;
+        $scope.isMoments = true;
+        $scope.isProverka = false;
 
         $scope.verPForBernulli = 0.7;
         $scope.countNumber = 50;
@@ -92,7 +94,7 @@ app2.controller('AppCtrl', ['$scope',
         };
 
         var moments = function(gener, degree){
-            $scope.results = [];
+            $scope.results.push("moments: ");
             $scope.results.push(nachMoment(gener, degree).toFixed(5));
             $scope.results.push(centrMoment(gener, degree).toFixed(5));
         };
@@ -107,7 +109,6 @@ app2.controller('AppCtrl', ['$scope',
                 if(findItem){
                     var findIndex = 0;
                     _.find($scope.dataFornormir, function(item, index){ if(item.number === result[i]){findIndex = index}; return false; });
-                    console.log(findIndex);
                     $scope.dataFornormir[findIndex].count = $scope.dataFornormir[findIndex].count + 1;
                 }
                 else{
@@ -117,9 +118,86 @@ app2.controller('AppCtrl', ['$scope',
                     });
                 }
             }
+            console.log($scope.dataFornormir);
             for(var i = 0; i < $scope.dataFornormir.length; i++){
                 $scope.data.push({x: $scope.dataFornormir[i].number, y: $scope.dataFornormir[i].count/N});
             }
+            console.log($scope.data);
+        };
+
+        var getBernulliArray = function(numbers, q, p){
+            var tempArray = [];
+            for(var i = 0; i < numbers.length; i++){
+                if(numbers[i].x === 0){
+                    tempArray.push(q);
+                }
+                else{
+                    tempArray.push(p);
+                }
+            }
+            return tempArray;
+        };
+
+        var factorial = function(number){
+            var temp = 1;
+            for(var i = 2; i <= number; i++){
+                temp = temp * i;
+            }
+            return temp;
+        };
+
+        var getPuassonArray = function(numbers, lyambda){
+            var tempArray = [];
+            for(var i = 0; i < numbers.length; i++){
+                var fact = factorial(numbers[i].x);
+                tempArray.push(((Math.pow(lyambda, numbers[i].x) * Math.exp(((-1)*lyambda)))/fact));
+            }
+            return tempArray;
+        };
+
+        var getBinKoeff = function(k, n){
+            var c = factorial(n);
+            c = c / (factorial(k) * factorial(n-k));
+            return c;
+        };
+
+        var getHGeomArray = function(numbers, D, M, n, N){
+            var tempArray = [];
+            for(var i = 0; i < numbers.length; i++){
+                var number = (getBinKoeff(numbers[i].x, D) * getBinKoeff(n - numbers[i].x, M - D));
+                number = number / getBinKoeff(n, M);
+                tempArray.push(number);
+            }
+            return tempArray;
+        };
+
+        var getFuncDefArray = function(type, normArray){
+            var tempArr = [];
+            switch(type){
+                case 'bernulli':
+                    tempArr = getBernulliArray(normArray, 1 - $scope.verPForBernulli, $scope.verPForBernulli);
+                    break;
+                case 'puasson':
+                    tempArr = getPuassonArray(normArray, $scope.lyambda);
+                    break;
+                case 'hyperGeom':
+                    tempArr = getHGeomArray(normArray, $scope.DGeom, $scope.MGeom, $scope.nGeom, $scope.countNumber);
+                    break;
+                default:
+                    break;
+            }
+            return tempArr;
+        };
+
+        var proverka = function(normArray, N, type){
+            var clon = _.clone(normArray);
+            var funcDefArray = getFuncDefArray(type, clon);
+            var xi2 = 0;
+            for(var i = 0; i < normArray.length; i++){
+                xi2 = xi2 + (((normArray[i].y*N - N*funcDefArray[i]) * (normArray[i].y*N - N*funcDefArray[i])) / N*funcDefArray[i]);
+            }
+            console.log(xi2);
+            console.log(normArray.length);
         };
 
         var bernulli = function(p, N){
@@ -134,12 +212,17 @@ app2.controller('AppCtrl', ['$scope',
                 }
             }
             normirovka($scope.results);
+            if($scope.isMoments){
+                moments($scope.results, $scope.degree);
+            }
+            if($scope.isProverka){
+                proverka($scope.data, $scope.countNumber, 'bernulli');
+            }
         };
 
         var puasson = function(lyambda, N){
             $scope.results = [];
             var epsPuasson = Math.exp(((-1)*lyambda));
-            console.log(epsPuasson);
             for(var i = 0; i < N; i++){
                 var temp = Math.random();
                 var number = 1;
@@ -150,10 +233,15 @@ app2.controller('AppCtrl', ['$scope',
                 $scope.results.push(number);
             }
             normirovka($scope.results);
+            if($scope.isMoments){
+                moments($scope.results, $scope.degree);
+            }
+            if($scope.isProverka){
+                proverka($scope.data, $scope.countNumber, 'puasson');
+            }
         };
 
         var hyperGeom = function(M, D, n, N){
-            console.log(N);
             $scope.results = [];
             var allArray = [];
             for(var i = 0; i < D; i++){
@@ -180,6 +268,12 @@ app2.controller('AppCtrl', ['$scope',
                 $scope.results.push(number);
             }
             normirovka($scope.results);
+            if($scope.isMoments){
+                moments($scope.results, $scope.degree);
+            }
+            if($scope.isProverka){
+                proverka($scope.data, $scope.countNumber, 'hyperGeom');
+            }
         };
 
         $scope.clickSubmit = function(){
