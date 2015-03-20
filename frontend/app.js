@@ -27,19 +27,19 @@ agfunderApp.controller('AppCtrl', ['$scope',
             {y: 'y', label: 'One', striped: true}
         ], lineMode: 'cardinal', tooltip: {mode: 'scrubber'}};
 
-        $scope.linKonD = 1;
-        $scope.linKonA = 115;
-        $scope.linKonC = 75;
-        $scope.linKonM = 130;
-        $scope.linKonX0 = 16;
-        $scope.countNumber = 25;
+        $scope.linKonD = 22;
+        $scope.linKonA = 12;
+        $scope.linKonC = 25;
+        $scope.linKonM = 121;
+        $scope.linKonX0 = 1;
+        $scope.countNumber = 10000;
 
-        $scope.linKonD2 = 1;
-        $scope.linKonA2 = 96;
-        $scope.linKonC2 = 105;
-        $scope.linKonX02 = 24;
-        $scope.maclarenK = 20;
-        $scope.degree = 1;
+        $scope.linKonD2 = 22;
+        $scope.linKonA2 = 12;
+        $scope.linKonC2 = 25;
+        $scope.linKonX02 = 1;
+        $scope.maclarenK = 1000;
+        $scope.degree = 5;
 
         $scope.results = [];
 
