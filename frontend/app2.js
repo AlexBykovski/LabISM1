@@ -16,6 +16,7 @@ app2.controller('AppCtrl', ['$scope',
         $scope.isHGeom = false;
         $scope.isMoments = true;
         $scope.isProverka = false;
+        $scope.limitNumber = 0;
 
         $scope.verPForBernulli = 0.7;
         $scope.countNumber = 50;
@@ -24,6 +25,9 @@ app2.controller('AppCtrl', ['$scope',
         $scope.DGeom = 15;
         $scope.nGeom = 10;
         $scope.degree = 0;
+        $scope.xi2El = 0;
+        $scope.xi2Array = [];
+        $scope.lengthLimit = [];
 
         $scope.options = {
             series: [
@@ -196,8 +200,20 @@ app2.controller('AppCtrl', ['$scope',
             for(var i = 0; i < normArray.length; i++){
                 xi2 = xi2 + (((normArray[i].y*N - N*funcDefArray[i]) * (normArray[i].y*N - N*funcDefArray[i])) / N*funcDefArray[i]);
             }
-            console.log(xi2);
-            console.log(normArray.length);
+            $scope.xi2El = xi2;
+        };
+
+        var proverka1 = function(normArray, N, limit, type){
+            var clon = [];
+            for(var i = 0; i < limit; i++){
+                clon.push(normArray[i]);
+            }
+            var funcDefArray = getFuncDefArray(type, clon);
+            var xi2 = 0;
+            for(var i = 0; i < normArray.length; i++){
+                xi2 = xi2 + (((normArray[i].y*N - N*funcDefArray[i]) * (normArray[i].y*N - N*funcDefArray[i])) / N*funcDefArray[i]);
+            }
+            $scope.xi2Array.push(xi2);
         };
 
         var bernulli = function(p, N){
@@ -236,9 +252,7 @@ app2.controller('AppCtrl', ['$scope',
             if($scope.isMoments){
                 moments($scope.results, $scope.degree);
             }
-            if($scope.isProverka){
-                proverka($scope.data, $scope.countNumber, 'puasson');
-            }
+            $scope.lengthLimit.push($scope.data.length);
         };
 
         var hyperGeom = function(M, D, n, N){
@@ -282,7 +296,21 @@ app2.controller('AppCtrl', ['$scope',
                     bernulli($scope.verPForBernulli, $scope.countNumber);
                     break;
                 case 'puasson':
-                    puasson($scope.lyambda, $scope.countNumber);
+                    for(var i = 0; i < 100; i++){
+                        puasson($scope.lyambda, $scope.countNumber);
+                    }
+                    var minEl = _.min($scope.lengthLimit);
+                    for(var i = 0; i < 100; i++){
+                        proverka1($scope.data, $scope.countNumber, minEl, 'puasson');
+                    }
+                    var sum=0;
+                    console.log($scope.xi2Array);
+                    for(var i = 0; i < 100; i++){
+                        if($scope.xi2Array[i] < $scope.limitNumber){
+                            sum = sum + 1;
+                        }
+                    }
+                    console.log("HERE" + sum);
                     break;
                 case 'hypergeom':
                     hyperGeom($scope.MGeom, $scope.DGeom, $scope.nGeom, $scope.countNumber);
